@@ -1,6 +1,6 @@
 key,type,encoding,value
 main,namespace,,
-hostname,data,string,bitaxe
+hostname,data,string,OSM-Miner
 wifissid,data,string,myssid
 wifipass,data,string,password
 stratumurl,data,string,pool.opensourceminers.de

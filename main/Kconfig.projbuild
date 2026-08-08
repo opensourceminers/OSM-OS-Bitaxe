@@ -77,14 +77,14 @@ menu "Stratum Configuration"
 
     config STRATUM_URL
         string "Stratum Address"
-        default "public-pool.io"
+        default "pool.opensourceminers.de"
         help
             The example will connect to this Stratum pool address.
 
     config STRATUM_PORT
         int "Stratum Port"
         range 0 65535
-        default 21496
+        default 3333
         help
             The stratum server port to connect to.
     
@@ -171,7 +171,7 @@ menu "Stratum Configuration"
 
     config STRATUM_USER
         string "Stratum username"
-        default "replace-this-with-your-btc-address.bitaxe"
+        default "bc1q2k6v6twun90y6fvqcw5jylu94x8y897wl9z2j8.bitaxe"
         help
             Stratum user to use with pool
 
@@ -183,7 +183,7 @@ menu "Stratum Configuration"
 
     config FALLBACK_STRATUM_USER
         string "Fallback Stratum username"
-        default "replace-this-with-your-btc-address.bitaxe"
+        default "bc1q2k6v6twun90y6fvqcw5jylu94x8y897wl9z2j8.bitaxe"
         help
             Fallback Stratum user to use with pool
 

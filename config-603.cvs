@@ -7,7 +7,7 @@ stratumurl,data,string,pool.opensourceminers.de
 stratumport,data,u16,3333
 stratumtls,data,u16,0
 stratumcert,data,string,x
-stratumuser,data,string,bc1q2k6v6twun90y6fvqcw5jylu94x8y897wl9z2j8.bitaxe
+stratumuser,data,string,bc1q2k6v6twun90y6fvqcw5jylu94x8y897wl9z2j8.osm
 stratumpass,data,string,x
 stratumdiff,data,u16,1000
 stratumxnsub,data,u16,0
@@ -15,7 +15,7 @@ fbstratumurl,data,string,solo.ckpool.org
 fbstratumport,data,u16,3333
 fbstratumtls,data,u16,0
 fbstratumcert,data,string,x
-fbstratumuser,data,string,bc1q2k6v6twun90y6fvqcw5jylu94x8y897wl9z2j8.bitaxe
+fbstratumuser,data,string,bc1q2k6v6twun90y6fvqcw5jylu94x8y897wl9z2j8.osm
 fbstratumpass,data,string,x
 fbstratumdiff,data,u16,1000
 fbstratumxnsum,data,u16,0

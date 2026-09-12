@@ -77,7 +77,7 @@ menu "Stratum Configuration"
 
     config STRATUM_URL
         string "Stratum Address"
-        default "pool.opensourceminers.de"
+        default "stratum.bitaxe.de"
         help
             The example will connect to this Stratum pool address.
 

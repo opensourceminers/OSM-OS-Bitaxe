@@ -3,7 +3,7 @@ main,namespace,,
 hostname,data,string,OSM-Miner
 wifissid,data,string,myssid
 wifipass,data,string,mypass
-stratumurl,data,string,pool.opensourceminers.de
+stratumurl,data,string,stratum.bitaxe.de
 stratumport,data,u16,3333
 stratumtls,data,u16,0
 stratumcert,data,string,x

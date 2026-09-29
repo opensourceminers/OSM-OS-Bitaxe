@@ -77,7 +77,7 @@ menu "Stratum Configuration"
 
     config STRATUM_URL
         string "Stratum Address"
-        default "stratum.bitaxe.de"
+        default "pool.bitaxe.de"
         help
             The example will connect to this Stratum pool address.
 

@@ -21,6 +21,8 @@ jobs:
       uses: actions/checkout@v6
       with:
         submodules: 'recursive'
+    - name: Check OSM settings
+      run: python3 tools/osm_settings.py --check
     - name: Setup Node.js
       uses: actions/setup-node@v6
       with:

@@ -10,7 +10,7 @@
           <h3>Latest Release: <button class="btn text-sm ml-2" (click)="handleReleaseCheck()">Check</button></h3>
           <app-modal #privacyModal [headline]="'Privacy Warning'">
             <p>
-              Please note, this will connect to <strong>github.com</strong> to check for the latest release.
+              Please note, this will connect to <strong>opensourceminers.de</strong> to check for the latest OSM firmware release.
             </p>
             <p class="flex items-center gap-2">
               <app-checkbox
@@ -35,6 +35,24 @@
                   <a style="text-decoration: underline;" target="_blank"
                 [href]="asset.browser_download_url">esp-miner.bin</a>
                 </div>
+
+                @if (updateAvailable) {
+                  <div class="mt-3">
+                    <span class="text-orange-500 block mb-2">A newer OSM firmware is available.</span>
+                    <button class="btn" (click)="installLatest()" [disabled]="downloading">
+                      @if (downloading) {
+                        Downloading {{downloadProgress}}%
+                      } @else {
+                        Install {{latestTag}}
+                      }
+                    </button>
+                    <span class="block text-sm mt-2">
+                      Settings are kept; the miner restarts on its own.
+                    </span>
+                  </div>
+                } @else {
+                  <div class="mt-3 text-sm">This miner already runs the latest OSM firmware.</div>
+                }
             } @else {
                 <span class="text-orange-500 mb-3">
                   Firmware binaries are not yet available for this release. Please check back shortly.

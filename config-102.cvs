@@ -1,7 +1,7 @@
 key,type,encoding,value
 main,namespace,,
 hostname,data,string,OSM-Miner
-wifissid,data,string,
+wifissid,data,string,IOT
 wifipass,data,string,
 stratumurl,data,string,pool.bitaxe.de
 stratumport,data,u16,3333

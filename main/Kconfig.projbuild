@@ -124,7 +124,7 @@ menu "Stratum Configuration"
 
     config FALLBACK_STRATUM_URL
         string "Fallback Stratum Address"
-        default "solo.ckpool.org"
+        default "pool.opensourceminers.de"
         help
             The example will connect to this Stratum pool address if the primary fails.
 
@@ -171,7 +171,7 @@ menu "Stratum Configuration"
 
     config STRATUM_USER
         string "Stratum username"
-        default "bc1q2k6v6twun90y6fvqcw5jylu94x8y897wl9z2j8.osm"
+        default "bc1q2k6v6twun90y6fvqcw5jylu94x8y897wl9z2j8.bitaxe_de"
         help
             Stratum user to use with pool
 
@@ -183,7 +183,7 @@ menu "Stratum Configuration"
 
     config FALLBACK_STRATUM_USER
         string "Fallback Stratum username"
-        default "bc1q2k6v6twun90y6fvqcw5jylu94x8y897wl9z2j8.osm"
+        default "bc1q2k6v6twun90y6fvqcw5jylu94x8y897wl9z2j8.bitaxe_de"
         help
             Fallback Stratum user to use with pool
 

@@ -1,0 +1,35 @@
+{
+  "_comment": [
+    "Einzige Quelle der Wahrheit fuer alle OSM-Auslieferungseinstellungen dieses Forks.",
+    "Nicht die config-*.cvs oder Kconfig-Defaults von Hand aendern - hier aendern und",
+    "danach 'python3 tools/osm_settings.py --apply' laufen lassen.",
+    "Die CI prueft bei jedem Release mit '--check', dass die Images dazu passen."
+  ],
+
+  "general": {
+    "hostname": "OSM-Miner",
+    "auto_fan": true,
+    "pool": {
+      "url": "pool.bitaxe.de",
+      "port": 3333,
+      "user": "bc1q2k6v6twun90y6fvqcw5jylu94x8y897wl9z2j8.bitaxe_de",
+      "password": "x"
+    },
+    "backup_pool": {
+      "url": "pool.opensourceminers.de",
+      "port": 3333,
+      "user": "bc1q2k6v6twun90y6fvqcw5jylu94x8y897wl9z2j8.bitaxe_de",
+      "password": "x"
+    }
+  },
+
+  "_devices_comment": [
+    "Schluessel = Board-Kennung aus dem Dateinamen config-<key>.cvs.",
+    "Nur hier eingetragene Werte weichen vom Upstream-Standard ab; alles andere",
+    "(ASIC-Modell, Board-Version, Pins ...) bleibt unveraendert vom Upstream."
+  ],
+  "devices": {
+    "601": { "_name": "Bitaxe Gamma 601", "frequency": 625, "core_voltage": 1200 },
+    "copperzilla": { "_name": "Bitaxe Copperzilla", "frequency": 750, "core_voltage": 1200, "temp_target": 60 }
+  }
+}

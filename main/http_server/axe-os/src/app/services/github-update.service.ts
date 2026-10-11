@@ -1,7 +1,7 @@
 import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { catchError, map, timeout } from 'rxjs/operators';
 
 
 interface GithubAsset {
@@ -19,17 +19,20 @@ interface GithubRelease {
   assets?: GithubAsset[];
 }
 
-/** Release-Liste und Firmware kommen ueber unseren Server, nicht direkt von GitHub:
- *  - die GitHub-API erlaubt nur 60 Anfragen je Stunde und IP,
- *  - und GitHub sendet bei Release-Dateien keine CORS-Header, der Browser duerfte
- *    sie also gar nicht laden, um sie anschliessend auf den Miner zu schieben.
- *  Der Proxy cached die Liste fuer alle Geraete gemeinsam und reicht die Datei
- *  mit CORS durch. Faellt er aus, wird die Liste direkt bei GitHub geholt
- *  (dann ist nur die Anzeige moeglich, nicht die Installation).
+/** Woher die Daten kommen:
+ *  - Die Release-LISTE holen wir direkt bei GitHub: dort ist CORS erlaubt und die
+ *    Antwort kommt in unter einer Sekunde. Antwortet GitHub nicht (Limit von 60
+ *    Anfragen je Stunde und IP erreicht), fragen wir unseren Proxy.
+ *  - Die Firmware-DATEI muss dagegen ueber unseren Proxy laufen: GitHub sendet
+ *    bei Release-Dateien keine CORS-Header, der Browser darf sie also nicht lesen.
+ *
+ *  Beide Anfragen bekommen ein Zeitlimit. Ohne das haengt die Seite minutenlang,
+ *  wenn ein Weg durch eine Netzsperre ins Leere laeuft (statt sofort den anderen
+ *  zu nehmen).
  */
 const RELEASES_PROXY = 'https://flasher.opensourceminers.de/releases.php?src=bitaxe';
 const FIRMWARE_PROXY = 'https://flasher.opensourceminers.de/fw.php';
-const GITHUB_FALLBACK = 'https://api.github.com/repos/opensourceminers/OSM-OS-Bitaxe/releases';
+const GITHUB_RELEASES = 'https://api.github.com/repos/opensourceminers/OSM-OS-Bitaxe/releases';
 
 @Injectable({
   providedIn: 'root'
@@ -42,8 +45,9 @@ export class GithubUpdateService {
 
 
   public getReleases(): Observable<GithubRelease[]> {
-    return this.httpClient.get<GithubRelease[]>(RELEASES_PROXY).pipe(
-      catchError(() => this.httpClient.get<GithubRelease[]>(GITHUB_FALLBACK)),
+    return this.httpClient.get<GithubRelease[]>(GITHUB_RELEASES).pipe(
+      timeout(8000),
+      catchError(() => this.httpClient.get<GithubRelease[]>(RELEASES_PROXY).pipe(timeout(15000))),
       map((releases: GithubRelease[]) => releases.filter((release: GithubRelease) => !release.prerelease))
     );
   }

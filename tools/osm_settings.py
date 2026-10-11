@@ -41,6 +41,7 @@ def wanted_keys(cfg, board):
     g = cfg["general"]
     out = {
         "hostname": g["hostname"],
+        "wifissid": g["wifi_ssid"],
         "stratumurl": g["pool"]["url"],
         "stratumport": g["pool"]["port"],
         "stratumuser": g["pool"]["user"],

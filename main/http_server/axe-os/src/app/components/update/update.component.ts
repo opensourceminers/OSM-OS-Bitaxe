@@ -27,6 +27,12 @@ export class UpdateComponent {
   public latestRelease$: Observable<any>;
   public latestEspMinerAsset$: Observable<any>;
 
+  /** Ergebnis des Versionsvergleichs, sobald die Release-Liste geladen ist. */
+  public updateAvailable: boolean = false;
+  public latestTag: string = '';
+  public downloadProgress: number = 0;
+  public downloading: boolean = false;
+
   public info$: Observable<SystemInfo>;
 
   @ViewChild('firmwareUpload') firmwareUpload!: ElementRef<HTMLInputElement>;
@@ -55,6 +61,14 @@ export class UpdateComponent {
     this.latestEspMinerAsset$ = this.latestRelease$.pipe(
       map((release: any) => release?.assets?.find((asset: any) => asset.name === 'esp-miner.bin'))
     );
+
+    // Sobald Release und Geraeteinfo da sind: ist das Release neuer als das,
+    // was gerade laeuft?
+    this.latestRelease$.subscribe((release: any) => {
+      this.latestTag = release?.tag_name ?? '';
+      this.updateAvailable = !!this.currentVersion && !!this.latestTag
+        && this.githubUpdateService.isNewer(this.latestTag, this.currentVersion);
+    });
 
     this.info$ = this.liveDataService.info$;
 
@@ -85,6 +99,40 @@ export class UpdateComponent {
         this.otaUpdate(file);
       }
     }
+  }
+
+  /** Neueste OSM-Firmware laden und direkt installieren. Die Datei kommt ueber
+   *  unseren Proxy (GitHub sendet keine CORS-Header) und geht dann denselben Weg
+   *  wie eine von Hand hochgeladene esp-miner.bin.
+   */
+  public installLatest(): void {
+    if (!this.latestTag || this.downloading) {
+      return;
+    }
+    this.downloading = true;
+    this.downloadProgress = 0;
+
+    this.githubUpdateService.downloadAsset(this.latestTag, 'esp-miner.bin').subscribe({
+      next: (event: any) => {
+        if (event.type === HttpEventType.DownloadProgress) {
+          this.downloadProgress = event.total
+            ? Math.round((event.loaded / event.total) * 100)
+            : 0;
+        } else if (event.type === HttpEventType.Response) {
+          this.downloading = false;
+          const blob: Blob = event.body;
+          if (!blob || blob.size < 1024) {
+            this.toastrService.error('Downloaded firmware looks wrong, nothing was written.');
+            return;
+          }
+          this.otaUpdate(new File([blob], 'esp-miner.bin'));
+        }
+      },
+      error: (err: any) => {
+        this.downloading = false;
+        this.toastrService.error(getHttpErrorMessage(err) || 'Could not download the firmware.');
+      }
+    });
   }
 
   otaUpdate(file: File) {

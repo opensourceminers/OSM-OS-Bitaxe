@@ -33,6 +33,11 @@
       "frequency": 625,
       "core_voltage": 1200
     },
+    "702": {
+      "_name": "Bitaxe Supra Hex 702",
+      "frequency": 550,
+      "core_voltage": 1250
+    },
     "copperzilla": {
       "_name": "Bitaxe Copperzilla",
       "frequency": 750,

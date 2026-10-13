@@ -19,8 +19,8 @@ fbstratumuser,data,string,bc1q2k6v6twun90y6fvqcw5jylu94x8y897wl9z2j8.bitaxe_de
 fbstratumpass,data,string,x
 fbstratumdiff,data,u16,1000
 fbstratumxnsum,data,u16,0
-asicfrequency,data,u16,490
-asicvoltage,data,u16,1166
+asicfrequency,data,u16,550
+asicvoltage,data,u16,1250
 asicmodel,data,string,BM1368
 devicemodel,data,string,suprahex
 boardversion,data,string,702

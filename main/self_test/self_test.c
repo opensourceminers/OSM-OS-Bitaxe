@@ -287,6 +287,20 @@ void self_test_record_nonce(GlobalState * GLOBAL_STATE, double nonce_diff)
     pthread_mutex_unlock(&measurement->lock);
 }
 
+// Boards whose ASIC defaults are not stable (e.g. Supra Hex 702 at 1166 mV
+// does not detect the whole chain) get their test point from the factory config.
+uint16_t self_test_get_frequency_mhz(GlobalState * GLOBAL_STATE)
+{
+    uint16_t frequency = nvs_config_get_u16(NVS_CONFIG_SELF_TEST_FREQUENCY);
+    return frequency != 0 ? frequency : GLOBAL_STATE->DEVICE_CONFIG.family.asic.default_frequency_mhz;
+}
+
+uint16_t self_test_get_voltage_mv(GlobalState * GLOBAL_STATE)
+{
+    uint16_t voltage = nvs_config_get_u16(NVS_CONFIG_SELF_TEST_VOLTAGE);
+    return voltage != 0 ? voltage : GLOBAL_STATE->DEVICE_CONFIG.family.asic.default_voltage_mv;
+}
+
 static bool self_test_should_run()
 {
     bool is_factory_flash = nvs_config_get_u64(NVS_CONFIG_BEST_DIFF) < 1;
@@ -398,14 +412,18 @@ static esp_err_t test_power_consumption(GlobalState * GLOBAL_STATE)
 
     ESP_LOGE(TAG, "POWER test failed! measured %.2f W, maximum %.2f W",
              power, maximum_power);
-    self_test_show_message(GLOBAL_STATE, "POWER:FAIL");
+    // Show the reading: without a serial console the display is the only way
+    // to see by how much a board misses its limit.
+    static char message[32];
+    snprintf(message, sizeof(message), "POWER:FAIL %.0fW", power);
+    self_test_show_message(GLOBAL_STATE, message);
     return ESP_FAIL;
 }
 
 static esp_err_t test_core_voltage(GlobalState * GLOBAL_STATE)
 {
     uint16_t core_voltage = VCORE_get_voltage_mv(GLOBAL_STATE);
-    uint16_t target_voltage = GLOBAL_STATE->DEVICE_CONFIG.family.asic.default_voltage_mv;
+    uint16_t target_voltage = self_test_get_voltage_mv(GLOBAL_STATE);
     float margin = target_voltage * SELF_TEST_CORE_VOLTAGE_TOLERANCE;
     ESP_LOGI(TAG, "Core voltage: %u mV (target: %u mV +/- %.0f mV)", core_voltage, target_voltage, margin);
 
@@ -414,7 +432,9 @@ static esp_err_t test_core_voltage(GlobalState * GLOBAL_STATE)
     }
 
     ESP_LOGE(TAG, "Core voltage test failed");
-    self_test_show_message(GLOBAL_STATE, "VCORE:FAIL");
+    static char message[32];
+    snprintf(message, sizeof(message), "VCORE:FAIL %umV", core_voltage);
+    self_test_show_message(GLOBAL_STATE, message);
     return ESP_FAIL;
 }
 
@@ -744,9 +764,9 @@ void self_test_task(void * pvParameters)
         tests_done(GLOBAL_STATE, false);
     }
 
+    // test_power_consumption() already shows POWER:FAIL with the reading, or BUCK:FAIL
     if (test_power_consumption(GLOBAL_STATE) != ESP_OK) {
         ESP_LOGE(TAG, "Power Draw Failed, target %.2f W", (float) GLOBAL_STATE->DEVICE_CONFIG.power_consumption_target);
-        self_test_show_message(GLOBAL_STATE, "POWER:FAIL");
         tests_done(GLOBAL_STATE, false);
     }
 

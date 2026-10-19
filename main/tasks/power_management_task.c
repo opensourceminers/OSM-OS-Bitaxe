@@ -10,6 +10,7 @@
 #include "utils.h"
 #include "asic_init.h"
 #include "asic_reset.h"
+#include "self_test.h"
 #include "driver/uart.h"
 
 #define POLL_RATE 100
@@ -226,10 +227,10 @@ void POWER_MANAGEMENT_task(void * pvParameters)
         }
 
         uint16_t core_voltage = GLOBAL_STATE->SELF_TEST_MODULE.is_active
-                                 ? GLOBAL_STATE->DEVICE_CONFIG.family.asic.default_voltage_mv
+                                 ? self_test_get_voltage_mv(GLOBAL_STATE)
                                  : nvs_config_get_u16(NVS_CONFIG_ASIC_VOLTAGE);
         float asic_frequency = GLOBAL_STATE->SELF_TEST_MODULE.is_active
-                                 ? GLOBAL_STATE-> DEVICE_CONFIG.family.asic.default_frequency_mhz
+                                 ? self_test_get_frequency_mhz(GLOBAL_STATE)
                                  : nvs_config_get_float(NVS_CONFIG_ASIC_FREQUENCY);
 
         if (core_voltage != last_core_voltage) {

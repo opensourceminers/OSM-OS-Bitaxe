@@ -59,11 +59,23 @@ def wanted_keys(cfg, board):
         out["asicvoltage"] = dev["core_voltage"]
     if "temp_target" in dev:
         out["temptarget"] = dev["temp_target"]
+    if "self_test" in dev:
+        # Werks-Selftest mit den Auslieferungswerten statt der Chip-Standardwerte;
+        # das Stromlimit des Selftests muss dazu passen.
+        st = dev["self_test"]
+        out["selftest_freq"] = st.get("frequency", dev["frequency"])
+        out["selftest_volt"] = st.get("core_voltage", dev["core_voltage"])
+        out["power_cons_tgt"] = st["power_target"]
     return out
 
 
 # Typ/Encoding fuer Schluessel, die wir ggf. neu anlegen muessen
-NEW_KEY_SPEC = {"temptarget": ("data", "u16")}
+NEW_KEY_SPEC = {
+    "temptarget": ("data", "u16"),
+    "selftest_freq": ("data", "u16"),
+    "selftest_volt": ("data", "u16"),
+    "power_cons_tgt": ("data", "u16"),
+}
 
 
 def patch_cvs(path, keys, apply_changes):
@@ -93,7 +105,7 @@ def patch_cvs(path, keys, apply_changes):
         lines.append(f"{key},{typ},{enc},{value}")
 
     if drift and apply_changes:
-        path.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+        path.write_bytes(("\n".join(lines) + "\n").encode("utf-8"))  # LF, auch unter Python 3.9
     return drift
 
 
@@ -130,7 +142,7 @@ def patch_kconfig(path, cfg, apply_changes):
             text = text[: m.start(2)] + want + text[m.end(2) :]
 
     if drift and apply_changes:
-        path.write_text(text, encoding="utf-8", newline="\n")
+        path.write_bytes(text.encode("utf-8"))  # LF, auch unter Python 3.9
     return drift
 
 

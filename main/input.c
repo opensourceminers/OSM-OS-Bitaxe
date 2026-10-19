@@ -61,8 +61,13 @@ esp_err_t input_init(void (*button_short_clicked_cb)(void), void (*button_long_p
         lv_group_set_default(group);
         lv_obj_t * active_screen = lv_screen_active();
         if (active_screen) {
+            // Must not be LV_OBJ_FLAG_HIDDEN: LVGL never focuses hidden objects,
+            // and a keypad indev without a focused object drops every button
+            // event (no screen switching, no AP toggle, no self-test cancel).
+            // Strip the styles and size it to zero so it draws nothing instead.
             lv_obj_t * dummy_obj = lv_obj_create(active_screen);
-            lv_obj_add_flag(dummy_obj, LV_OBJ_FLAG_HIDDEN);
+            lv_obj_remove_style_all(dummy_obj);
+            lv_obj_set_size(dummy_obj, 0, 0);
             lv_group_add_obj(group, dummy_obj);
         }
 

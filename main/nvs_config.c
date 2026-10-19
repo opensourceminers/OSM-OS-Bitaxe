@@ -112,6 +112,9 @@ static Settings settings[NVS_CONFIG_COUNT] = {
     [NVS_CONFIG_SELF_TEST_TEMP_WARMUP]                 = {.nvs_key_name = "selftest_warm",   .type = TYPE_U16,   .default_value = {.u16 = 55}},
     [NVS_CONFIG_SELF_TEST_TEMP_MAX]                    = {.nvs_key_name = "selftest_max",    .type = TYPE_U16,   .default_value = {.u16 = 70}},
     [NVS_CONFIG_SELF_TEST_FAN_SPEED]                   = {.nvs_key_name = "selftest_fan",    .type = TYPE_U16,   .default_value = {.u16 = 1000}},
+    // 0 = ASIC default; set per board by the factory config
+    [NVS_CONFIG_SELF_TEST_FREQUENCY]                   = {.nvs_key_name = "selftest_freq",   .type = TYPE_U16},
+    [NVS_CONFIG_SELF_TEST_VOLTAGE]                     = {.nvs_key_name = "selftest_volt",   .type = TYPE_U16},
     [NVS_CONFIG_TPS546_PHASE]                          = {.nvs_key_name = "tps546_phase",    .type = TYPE_U16},
     [NVS_CONFIG_TPS546_VIN_ON]                         = {.nvs_key_name = "tps546_vin_on",   .type = TYPE_FLOAT},
     [NVS_CONFIG_TPS546_VIN_OFF]                        = {.nvs_key_name = "tps546_vin_off",  .type = TYPE_FLOAT},

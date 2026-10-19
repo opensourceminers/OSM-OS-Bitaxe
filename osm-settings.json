@@ -36,7 +36,16 @@
     "702": {
       "_name": "Bitaxe Supra Hex 702",
       "frequency": 550,
-      "core_voltage": 1250
+      "core_voltage": 1250,
+      "self_test": {
+        "_comment": [
+          "Werks-Selftest mit 550/1250 statt der Chip-Standardwerte 490/1166 - bei denen",
+          "meldet der 702 'ASIC 2,3,4,5 not found'. power_target = Messwert (Vout*Iout",
+          "+ 25 W, wie im Dashboard), Grenze = power_target + 3 W. 105 W ist geschaetzt",
+          "(Upstream-Ziel 90 W bei 490/1166, hochgerechnet) - nach Messung anpassen."
+        ],
+        "power_target": 105
+      }
     },
     "copperzilla": {
       "_name": "Bitaxe Copperzilla",
